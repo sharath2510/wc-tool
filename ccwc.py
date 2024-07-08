@@ -11,8 +11,8 @@ def args_setup():
     parser.add_argument("-m", action="store_true", help="Count number of characters in file")
     args = parser.parse_args()
 
-    # If none of the options are provided, default to True for all options
-    if not any(vars(args).values()):
+    # If none of the count options are provided, display the -c, -l & -w options
+    if not any([args.c, args.l, args.w, args.m]):
         args.c = args.l = args.w = True
 
     return args
@@ -37,28 +37,28 @@ def count_bytes(file_name):
     with open(file_name, "rb") as file:
         file_content = file.read()
         num_bytes = len(file_content)
-        print(f"{num_bytes} {file_name}", end=' ')
+        print(num_bytes, end=' ')
 
 def count_lines(file_name, encoding):
     with open(file_name, "r", encoding=encoding) as file:
         line_count = 0
         for _ in file:
             line_count += 1
-    print(f"{line_count} {file_name}", end=' ')
+    print(line_count, end=' ')
 
 def count_words(file_name, encoding):
     with open(file_name, "r", encoding=encoding) as file:
         word_count = 0
         for line in file:
             word_count += len(line.split())
-    print(f"{word_count} {file_name}", end=' ')
+    print(word_count, end=' ')
 
 def count_characters(file_name, encoding):
     if is_multibyte_supported():
         with open(file_name, "r", encoding=encoding) as file:
             content = file.read()
             character_count = len(content)
-        print(f"{character_count} {file_name}", end=' ')
+        print(character_count, end=' ')
     else:
         count_bytes(file_name)
 
@@ -73,6 +73,7 @@ def main(args):
         count_words(file_name, encoding)
     if args.m:
         count_characters(file_name, encoding)
+    print(args.file_name)
 
 if __name__ == "__main__":
     args = args_setup()
